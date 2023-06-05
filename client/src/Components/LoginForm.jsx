@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthProvider";
 
 const LoginForm = () => {
@@ -14,9 +14,9 @@ const LoginForm = () => {
             console.log(err)
         }
     }
-    // if (user) {
-    //     return <Navigate to={"/"} />
-    // }
+    if (user) {
+        return <Navigate to={"/"} />
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -24,6 +24,7 @@ const LoginForm = () => {
             <input type="password" name="password" placeholder="password" />
             <input type="submit" value="Login" />
         </form>
+
 
     )
 }
