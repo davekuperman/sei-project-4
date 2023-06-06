@@ -19,11 +19,14 @@ const LoginForm = () => {
     }
 
     return (
+        <>
         <form onSubmit={handleSubmit}>
             <input type="text" name="email" placeholder="Email" />
             <input type="password" name="password" placeholder="password" />
             <input type="submit" value="Login" />
         </form>
+        <Link to="/signup">Register Here</Link>
+        </>
 
 
     )

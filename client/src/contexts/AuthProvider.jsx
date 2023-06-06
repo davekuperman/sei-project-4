@@ -14,15 +14,15 @@ export const AuthProvider = ({ children }) => {
 
     // when a component is mounted, check that the user is logged in and if they are set the user as logged in
     useEffect(() => {
+
         const loginCheck = async () => {
             const res = await fetch("/api/session")
             const user = await res.json()
             if (res.status === 200) setUser(user)
-            
-            setIsLoadingUser(false)
         }
         setIsLoadingUser(true)
         loginCheck()
+        setIsLoadingUser(false)
     }, [])
 
     //function that logs in a user
@@ -46,15 +46,29 @@ export const AuthProvider = ({ children }) => {
     };
 
     //function that logs out the user
-    const logout = async () =>{
-        const res = await fetch ("api/session",{
+    const logout = async () => {
+        const res = await fetch("/api/session", {
             method: "DELETE",
+        })
+        setUser(null)
+    }
+
+    //function that signs up a user
+    const signUp = async (fields) => {
+        const res = await fetch("/api/users", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(fields),
         })
     }
 
-    return(
-        <AuthContext.Provider value = {{ user, login, }}>
-            { children }
+
+
+    return (
+        <AuthContext.Provider value={{ user, login, logout, signUp }}>
+            {children}
         </AuthContext.Provider>
     )
 }
