@@ -12,7 +12,7 @@ function App() {
   console.log('User:', user)
   return (
     <>
-    <h1>Recipe generator</h1>
+    <h1>PantryPilot</h1>
     <nav>
       <NavLink to="/"> Home </NavLink>
       <NavLink to="/login" >Log in</NavLink>

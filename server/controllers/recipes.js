@@ -1,5 +1,6 @@
 const express = require('express')
-const { getAllRecipes } = require('../models/recipe')
+const asyncHandler = require('../middleware/async-handler')
+const { getAllRecipes, createRecipe } = require('../models/recipe')
 
 const router = express.Router()
 
@@ -11,5 +12,11 @@ router.get('/',(req,res) => {
     res.status(500).json({ error: `Couldn't find any recipes`})
    })
 })
+
+router.post('/', asyncHandler(async (req, res) => {
+   const recipeData = req.body
+   const recipeId = await createRecipe(recipeData)
+   res.status(201).json({ id: recipeId, message: 'Recipe created successfully' })
+ }))
 
 module.exports = router
