@@ -1,7 +1,7 @@
 const express = require('express')
 const asyncHandler = require('../middleware/async-handler')
 const { getAllRecipes, createRecipe, getRecipesByUserId, getRecipeById } = require('../models/recipe')
-
+const { fetchRecipeFromLLM } = require('../models/fetchRecipe')
 const router = express.Router()
 
 router.get('/', (req, res) => {
@@ -40,6 +40,36 @@ router.get('/:id', (req, res) => {
       })
 })
 
+router.post('/', async (req, res, next) => {
+   try {
+      console.log(req.session.user.id)
+      const userId = req.session.user.id
+      const ingredients = req.body.ingredients
+
+      if (!ingredients) {
+         const customError = new Error(" You need ingredients to create a recipe!")
+         customError.status = 400
+         return next(customError)
+      }
+
+      const recipeResponse = await fetchRecipeFromLLM(ingredients)
+      const recipe = JSON.parse(recipeResponse)
+      console.log('Your resulting recipe:', recipe)
+      const recipeName = recipe.recipeName
+      console.log(recipeName)
+      const recipeIngredients = recipe.ingredients
+      const instructions = recipe.instructions
+      const cookingTime = recipe.cookingTime
+      const servings = recipe.servings
+
+      const recipeResult = await createRecipe(userId, recipeName, recipeIngredients, instructions, cookingTime, servings)
+
+      return res.status(200).json(recipeResult[0])
+
+   } catch (error) {
+      return next(error)
+   }
+})
 
 router.post('/', asyncHandler(async (req, res) => {
    const recipeData = req.body

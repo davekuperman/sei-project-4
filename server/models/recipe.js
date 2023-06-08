@@ -29,15 +29,14 @@ const getRecipeById = (id) => {
   return db.query(query, [id]).then((res) => res.rows[0]);
 };
 
-const createRecipe = (recipeData) => {
-  const { user_id, recipe_name, ingredients, instructions, cooking_time, servings } = recipeData
+const createRecipe = (userId, recipeName, ingredients, instructions, cookingTime, servings) => {
   const query = `INSERT INTO recipes (user_id, recipe_name, ingredients, instructions, cooking_time, servings)
                  VALUES ($1, $2, $3, $4, $5, $6)
-                 RETURNING id`
+                 RETURNING *`
 
-  const values = [user_id, recipe_name, JSON.stringify(ingredients), JSON.stringify(instructions), cooking_time, servings]
+  const values = [userId, recipeName, JSON.stringify(ingredients), JSON.stringify(instructions), cookingTime, servings]
 
-  return db.query(query, values).then((res) => res.rows.id)
+  return db.query(query, values).then((res) => res.rows[0].id)
 }
 
 module.exports = { getAllRecipes, createRecipe, getRecipesByUserId, getRecipeById }

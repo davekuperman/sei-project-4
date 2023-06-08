@@ -54,6 +54,7 @@ async function fetchRecipeFromLLM(ingredients) {
     });
 
     const responseBody = await response.json();
+    console.log('response body:', responseBody)
     const recipeResponse = responseBody.choices[0].message.content || false;
 
     if (validateJson(JSON.parse(recipeResponse), recipeSchema)) {

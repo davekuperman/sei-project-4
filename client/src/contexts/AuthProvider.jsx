@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const [isLoadingUser, setIsLoadingUser] = useState(true)
     const navigate = useNavigate()
 
-    // when a component is mounted, check that the user is logged in and if they are set the user as logged in
+    // when a component is mounted, check that the user is logged in. If they are set the user as logged in
     useEffect(() => {
 
         const loginCheck = async () => {
