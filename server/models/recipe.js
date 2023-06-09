@@ -39,4 +39,9 @@ const createRecipe = (userId, recipeName, ingredients, instructions, cookingTime
   return db.query(query, values).then((res) => res.rows[0].id)
 }
 
-module.exports = { getAllRecipes, createRecipe, getRecipesByUserId, getRecipeById }
+const deleteRecipeById = (id) => {
+  const query = `DELETE FROM recipes WHERE id = $1`;
+  return db.query(query, [id]);
+};
+
+module.exports = { getAllRecipes, createRecipe, getRecipesByUserId, getRecipeById, deleteRecipeById }

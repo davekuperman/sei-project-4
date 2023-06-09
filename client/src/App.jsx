@@ -2,66 +2,96 @@ import { useState } from 'react'
 import { Route, Routes, NavLink } from 'react-router-dom'
 import { useAuth } from './contexts/AuthProvider'
 
+import {
+  Box,
+  ChakraProvider,
+  Heading,
+  Link,
+  Flex,
+  Spacer,
+  Button,
+} from '@chakra-ui/react'
+
 import LoginForm from './Components/LoginForm'
 import Logout from './Components/Logout'
 import SignUp from './Pages/Signup'
 import HomePage from './Pages/HomePage'
 import RecipesPage from './Pages/RecipesPage'
-import IngredientInputForm from './Components/IngredientInputForm'
 
 function App() {
   const { user } = useAuth()
   console.log('User:', user)
-  const [generatedRecipe, setGeneratedRecipe] = useState(null);
-  const handleFormSubmit = (ingredients) => {
-    // Perform any necessary validation or processing before submitting the form
-  };
 
-  const handleRecipeGenerated = (recipe) => {
-    setGeneratedRecipe(recipe);
-  };
 
   return (
     <>
-    <h1>PantryPilot</h1>
-    <nav>
-    <NavLink to="/"> Home </NavLink>
-        {user && (
-          <>
-            <NavLink to="/recipes">Recipes</NavLink> 
-            <Logout />
-          </>
-        )}
-        {!user && (
-          <>
-            <NavLink to="/login">Log in</NavLink>
-            <NavLink to="/signup">Sign up</NavLink>
-          </>
-        )}
-    </nav>
-    <Routes>
-      <Route path="/login" element={<LoginForm />}></Route>
-      <Route path="/signup" element={<SignUp />}></Route>
-      <Route path="/" element={<HomePage />}></Route>
-      {user && (
-          <Route path="/recipes" element={<RecipesPage />}></Route>
-        )}
-        <Route
-          path="/generate-recipe"
-          element={
-            <IngredientInputForm
-              onFormSubmit={handleFormSubmit}
-              onRecipeGenerated={handleRecipeGenerated}
-            />
-          }
-        ></Route>
-      </Routes>
-      {generatedRecipe && (
-        <div>
-          <h2>Generated Recipe:</h2>
-          <pre>{JSON.stringify(generatedRecipe, null, 2)}</pre>
-        </div>
-      )}
+      <Box p={4} bg="orange.200">
+        <Flex alignItems="center">
+          <Heading as="h1" size="xl" mr={4} color="yellow.800">
+            PantryPilot
+          </Heading>
+          <Spacer />
+          <nav>
+            {!user && (
+              <>
+                <Link
+                  as={NavLink}
+                  to="/login"
+                  mr={2}
+                  color="yellow.800"
+                  fontWeight="bold"
+                  _hover={{ color: 'yellow.600' }}
+                >
+                  Log in
+                </Link>
+                <Link
+                  as={NavLink}
+                  to="/signup"
+                  mr={2}
+                  color="yellow.800"
+                  fontWeight="bold"
+                  _hover={{ color: 'yellow.600' }}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
+            {user && (
+              <>
+                <Link
+                  as={NavLink}
+                  to="/"
+                  mr={2}
+                  color="yellow.800"
+                  fontWeight="bold"
+                  _hover={{ color: 'yellow.600' }}
+                >
+                  Home
+                </Link>
+                <Link
+                  as={NavLink}
+                  to="/recipes"
+                  mr={2}
+                  color="yellow.800"
+                  fontWeight="bold"
+                  _hover={{ color: 'yellow.600' }}
+                >
+                  Recipes
+                </Link>
+                <Logout />
+              </>
+            )}
+          </nav>
+        </Flex>
+      </Box>
+      <Box p={4} bg="yellow.50">
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignUp />} />
+          {user && <Route path="/recipes" element={<RecipesPage />} />}
+          {user && <Route path="/" element={<HomePage />} />}
+        </Routes>
+      </Box>
     </>
   )
 }

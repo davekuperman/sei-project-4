@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
             },
             body: JSON.stringify(fields),
         });
-        const data = await res.json();
+        const data = await res.json()
         if (res.status !== 200) {
             throw {
                 status: res.status,

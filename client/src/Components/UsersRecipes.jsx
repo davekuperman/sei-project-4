@@ -1,7 +1,21 @@
 import { Link, Navigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-
 import { useAuth } from "../contexts/AuthProvider"
+
+import {
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Box,
+    Button,
+    Text,
+    Heading,
+    List,
+    ListItem,
+    CloseButton,
+  } from "@chakra-ui/react"
 
 const UsersRecipes = () => {
 
@@ -29,42 +43,76 @@ const UsersRecipes = () => {
         setSelectedRecipe(recipe)
     }
 
+    const handleDeleteRecipe = async (recipeId) => {
+        try {
+            await fetch(`/api/recipes/${recipeId}`, {
+                method: "DELETE",
+            });
+            // Remove the deleted recipe from the recipes state
+            setRecipes((prevRecipes) =>
+                prevRecipes.filter((recipe) => recipe.id !== recipeId)
+            );
+            setSelectedRecipe(null)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if (!recipes) {
         return <p>Loading recipes...</p>
     }
 
     return (
         <>
-             <h1>Your saved recipes</h1>
-      {recipes.map((recipe) => (
-        <div key={recipe.id}>
-          <button onClick={() => handleRecipeClick(recipe)}>
-            {recipe.recipe_name}
-          </button>
-          {selectedRecipe && selectedRecipe.id === recipe.id && (
-            <div>
-              <h2>{selectedRecipe.recipe_name}</h2>
-              <h3>Ingredients:</h3>
-              <ul>
-                {selectedRecipe.ingredients.map((ingredient, index) => (
-                  <li key={index}>
+            <Heading as="h1" size="xl" mb={4}>
+        Your saved recipes
+      </Heading>
+      <Accordion allowMultiple>
+        {recipes.map((recipe) => (
+          <AccordionItem key={recipe.id}>
+            <h2>
+              <AccordionButton>
+                <Box flex="1" textAlign="left">
+                  {recipe.recipe_name}
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </h2>
+            <AccordionPanel pb={4}>
+              <Text>
+                <strong>{recipe.recipe_name}</strong>
+              </Text>
+              <Text mt={2} fontWeight="bold">
+                Ingredients:
+              </Text>
+              <List>
+                {recipe.ingredients.map((ingredient, index) => (
+                  <ListItem key={index}>
                     {ingredient.name}: {ingredient.quantity}
-                  </li>
+                  </ListItem>
                 ))}
-              </ul>
-              <h3>Instructions:</h3>
+              </List>
+              <Text mt={2} fontWeight="bold">
+                Instructions:
+              </Text>
               <ol>
-                {selectedRecipe.instructions.map((instruction, index) => (
+                {recipe.instructions.map((instruction, index) => (
                   <li key={index}>{instruction}</li>
                 ))}
               </ol>
-              <p>Cooking Time: {selectedRecipe.cooking_time}</p>
-              <p>Servings: {selectedRecipe.servings}</p>
-              <button onClick={() => setSelectedRecipe(null)}>Close</button>
-            </div>
-          )}
-        </div>
-      ))}
+              <Text mt={2}>Cooking Time: {recipe.cooking_time}</Text>
+              <Text>Servings: {recipe.servings}</Text>
+              <Button
+                mt={4}
+                variant="outline"
+                onClick={() => handleDeleteRecipe(recipe.id)}
+              >
+                Delete
+              </Button>
+            </AccordionPanel>
+          </AccordionItem>
+        ))}
+      </Accordion>
         </>
     );
 };

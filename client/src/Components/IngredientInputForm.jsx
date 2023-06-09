@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const IngredientInputForm = ({ onFormSubmit }) => {
+const IngredientInputForm = ({ onFormSubmit, onRecipeGenerated }) => {
     const [ingredient, setIngredient] = useState("");
     const [ingredientsList, setIngredientsList] = useState([]);
     const [generatedRecipe, setGeneratedRecipe] = useState("")
@@ -22,11 +22,20 @@ const IngredientInputForm = ({ onFormSubmit }) => {
         );
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault()
         onFormSubmit(ingredientsList)
-        generateRecipe(ingredientsList)
+        const recipe = await generateRecipe(ingredientsList)
+        onRecipeGenerated(recipe)
     }
+
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault()
+          handleAddIngredient()
+        }
+      }
+    
 
     const generateRecipe = async (ingredients) => {
         const response = await fetch("/api/recipes", {
@@ -37,8 +46,8 @@ const IngredientInputForm = ({ onFormSubmit }) => {
             body: JSON.stringify({ ingredients }),
         });
 
-        const recipe = await response.json();
-        onRecipeGenerated(recipe);
+        const recipe = await response.json()
+        return recipe
     };
 
     return (
@@ -50,6 +59,7 @@ const IngredientInputForm = ({ onFormSubmit }) => {
                     placeholder="Enter an ingredient"
                     value={ingredient}
                     onChange={handleIngredientChange}
+                    onKeyPress={handleKeyPress}
                 />
                 <button type="button" onClick={handleAddIngredient}>
                     Add Ingredient
@@ -70,10 +80,27 @@ const IngredientInputForm = ({ onFormSubmit }) => {
                 <button type="submit">Generate Recipe</button>
             </form>
             {generatedRecipe && (
-                <div>
-                    <h3>Generated Recipe:</h3>
-                    <pre>{JSON.stringify(generatedRecipe, null, 2)}</pre>
-                </div>
+        <div>
+        <h3>Generated Recipe:</h3>
+        <h4>Name: {generatedRecipe.recipe_name}</h4>
+        <h4>Ingredients:</h4>
+        <ul>
+          {generatedRecipe.ingredients.map((ingredient, index) => (
+            <li key={index}>
+              {ingredient.name}: {ingredient.quantity}
+            </li>
+          ))}
+        </ul>
+        <h4>Instructions:</h4>
+        <ol>
+          {generatedRecipe.instructions.map((instruction, index) => (
+            <li key={index}>{instruction}</li>
+          ))}
+        </ol>
+        <h4>Cooking Time: {generatedRecipe.cooking_time}</h4>
+        <h4>Servings: {generatedRecipe.servings}</h4>
+        <button>Save Recipe</button>
+      </div>
             )}
         </div>
     );

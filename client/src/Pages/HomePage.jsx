@@ -1,15 +1,16 @@
 import { useAuth } from "../contexts/AuthProvider";
-import { useState, useEffect, createContext, useContext } from "react"
-import IngredientInputForm from "../Components/IngredientInputForm";
+import { useState } from "react";
+import Home from "../Components/Home";
+//import logout from "logout"
 
-const HomePage = () => {
-    const { user } = useAuth()
-    return (
-        <div>
-            <p>Welcome back {user?.first_name}</p>
-            <IngredientInputForm/>
-            
-        </div>
+const HomePage = () =>{
+    const { user, isLoadingUser } = useAuth()
+
+    return(
+        <>
+        <Home/>
+          
+        </>
     )
 }
 
