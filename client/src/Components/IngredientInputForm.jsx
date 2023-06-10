@@ -1,9 +1,33 @@
 import { useState } from "react";
+import { useRecipe } from "../contexts/GptProvider";
+import {
+    Box,
+    Heading,
+    Text,
+    Input,
+    Button,
+    UnorderedList,
+    ListItem,
+} from "@chakra-ui/react";
 
-const IngredientInputForm = ({ onFormSubmit, onRecipeGenerated }) => {
+const IngredientInputForm = () => {
+    const { generateRecipe, generatedRecipe } = useRecipe ()
+    console.log(generatedRecipe)
     const [ingredient, setIngredient] = useState("");
     const [ingredientsList, setIngredientsList] = useState([]);
-    const [generatedRecipe, setGeneratedRecipe] = useState("")
+    
+
+    
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        const ingredients = ingredientsList
+        try{
+            await generateRecipe(ingredients)
+
+        } catch(err){
+            console.log(err)
+        }
+    }
 
     const handleIngredientChange = (e) => {
         setIngredient(e.target.value);
@@ -22,85 +46,85 @@ const IngredientInputForm = ({ onFormSubmit, onRecipeGenerated }) => {
         );
     };
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault()
-        onFormSubmit(ingredientsList)
-        const recipe = await generateRecipe(ingredientsList)
-        onRecipeGenerated(recipe)
-    }
-
+    
     const handleKeyPress = (e) => {
         if (e.key === "Enter") {
-          e.preventDefault()
-          handleAddIngredient()
+            e.preventDefault()
+            handleAddIngredient()
         }
-      }
+    }
     
-
-    const generateRecipe = async (ingredients) => {
-        const response = await fetch("/api/recipes", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ingredients }),
-        });
-
-        const recipe = await response.json()
-        return recipe
-    };
 
     return (
         <div>
-            <h2>Enter Available Ingredients</h2>
-            <form onSubmit={handleFormSubmit}>
-                <input
+            <Heading as="h2" mb={4}>
+                Enter Available Ingredients
+            </Heading>
+            <form onSubmit={handleSubmit}>
+                <Input
                     type="text"
                     placeholder="Enter an ingredient"
                     value={ingredient}
                     onChange={handleIngredientChange}
                     onKeyPress={handleKeyPress}
+                    mb={4}
                 />
-                <button type="button" onClick={handleAddIngredient}>
+                <Button onClick={handleAddIngredient} mb={4}>
                     Add Ingredient
-                </button>
-                <ul>
+                </Button>
+                <UnorderedList>
                     {ingredientsList.map((ingredient, index) => (
-                        <li key={index}>
+                        <ListItem key={index} mb={2}>
                             {ingredient}
-                            <button
-                                type="button"
+                            <Button
                                 onClick={() => handleRemoveIngredient(index)}
+                                ml={2}
+                                size="sm"
+                                variant="outline"
                             >
                                 Remove
-                            </button>
-                        </li>
+                            </Button>
+                        </ListItem>
                     ))}
-                </ul>
-                <button type="submit">Generate Recipe</button>
+                </UnorderedList>
+                <Button type="submit" colorScheme="blue" mt={4}>
+                    Generate Recipe
+                </Button>
             </form>
             {generatedRecipe && (
-        <div>
-        <h3>Generated Recipe:</h3>
-        <h4>Name: {generatedRecipe.recipe_name}</h4>
-        <h4>Ingredients:</h4>
-        <ul>
-          {generatedRecipe.ingredients.map((ingredient, index) => (
-            <li key={index}>
-              {ingredient.name}: {ingredient.quantity}
-            </li>
-          ))}
-        </ul>
-        <h4>Instructions:</h4>
-        <ol>
-          {generatedRecipe.instructions.map((instruction, index) => (
-            <li key={index}>{instruction}</li>
-          ))}
-        </ol>
-        <h4>Cooking Time: {generatedRecipe.cooking_time}</h4>
-        <h4>Servings: {generatedRecipe.servings}</h4>
-        <button>Save Recipe</button>
-      </div>
+                <Box mt={4}>
+                    <Heading as="h3" mb={2}>
+                        Generated Recipe:
+                    </Heading>
+                    <Text as="h4" mb={2} color="darkgreen" fontWeight="bold" >
+                        {generatedRecipe.recipeName}
+                    </Text>
+                    <Text as="h4" mb={2} color="darkred">
+                        Ingredients:
+                    </Text>
+                    <UnorderedList mb={2} >
+                        {generatedRecipe.ingredients.map((ingredient, index) => (
+                            <ListItem key={index} color="black" >
+                                {ingredient.name}: {ingredient.quantity}
+                            </ListItem>
+                        ))}
+                    </UnorderedList>
+                    <Text as="h4" mb={2} color="darkred" fontWeight="bold"  > 
+                        Instructions:
+                    </Text>
+                    <ol color="orange">
+                        {generatedRecipe.instructions.map((instruction, index) => (
+                            <li key={index} >{instruction}</li>
+                        ))}
+                    </ol>
+                    <Text as="h4" mb={2}>
+                        Cooking Time: {generatedRecipe.cooking_time}
+                    </Text>
+                    <Text as="h4" mb={2} color="chocolate">
+                        Servings: {generatedRecipe.servings}
+                    </Text>
+                    <Button colorScheme="blue">Save Recipe</Button>
+                </Box>
             )}
         </div>
     );

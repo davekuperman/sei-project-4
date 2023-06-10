@@ -1,12 +1,21 @@
-import { Link, Navigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthProvider";
+import { Link, Navigate } from "react-router-dom"
+import { useAuth } from "../contexts/AuthProvider"
+import {
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Text,
+  } from "@chakra-ui/react"
+
+
 
 const LoginForm = () => {
 
     const { login, user } = useAuth()
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        event.preventDefault()
         const fields = Object.fromEntries(new FormData(event.target))
         try {
             await login(fields)
@@ -20,12 +29,25 @@ const LoginForm = () => {
 
     return (
         <>
-        <form onSubmit={handleSubmit}>
-            <input type="text" name="email" placeholder="Email" />
-            <input type="password" name="password" placeholder="password" />
-            <input type="submit" value="Login" />
-        </form>
-        <Link to="/signup">Register Here</Link>
+      <form onSubmit={handleSubmit}>
+        <FormControl id="email" isRequired>
+          <FormLabel>Email</FormLabel>
+          <Input type="text" name="email" placeholder="Email" />
+        </FormControl>
+        <FormControl id="password" isRequired>
+          <FormLabel>Password</FormLabel>
+          <Input type="password" name="password" placeholder="Password" />
+        </FormControl>
+        <Button mt={4} colorScheme="teal" type="submit">
+          Login
+        </Button>
+      </form>
+      <Text mt={2}>
+        Don't have an account?{" "}
+        <Link to="/signup" color="teal.500">
+          Register Here
+        </Link>
+      </Text>
         </>
 
 

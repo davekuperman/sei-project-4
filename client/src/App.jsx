@@ -4,7 +4,6 @@ import { useAuth } from './contexts/AuthProvider'
 
 import {
   Box,
-  ChakraProvider,
   Heading,
   Link,
   Flex,
@@ -34,50 +33,14 @@ function App() {
           <nav>
             {!user && (
               <>
-                <Link
-                  as={NavLink}
-                  to="/login"
-                  mr={2}
-                  color="yellow.800"
-                  fontWeight="bold"
-                  _hover={{ color: 'yellow.600' }}
-                >
-                  Log in
-                </Link>
-                <Link
-                  as={NavLink}
-                  to="/signup"
-                  mr={2}
-                  color="yellow.800"
-                  fontWeight="bold"
-                  _hover={{ color: 'yellow.600' }}
-                >
-                  Sign up
-                </Link>
+                <Link as={NavLink} to="/login" mr={2} color="yellow.800" fontWeight="bold" _hover={{ color: 'yellow.600' }}> Log in</Link>
+                <Link as={NavLink} to="/signup" mr={2} color="yellow.800" fontWeight="bold" _hover={{ color: 'yellow.600' }} > Sign up  </Link>
               </>
             )}
             {user && (
               <>
-                <Link
-                  as={NavLink}
-                  to="/"
-                  mr={2}
-                  color="yellow.800"
-                  fontWeight="bold"
-                  _hover={{ color: 'yellow.600' }}
-                >
-                  Home
-                </Link>
-                <Link
-                  as={NavLink}
-                  to="/recipes"
-                  mr={2}
-                  color="yellow.800"
-                  fontWeight="bold"
-                  _hover={{ color: 'yellow.600' }}
-                >
-                  Recipes
-                </Link>
+                <Link as={NavLink} to="/" mr={2} color="yellow.800" fontWeight="bold" _hover={{ color: 'yellow.600' }}> Home </Link>
+                <Link as={NavLink} to="/recipes" mr={2} color="yellow.800" fontWeight="bold" _hover={{ color: 'yellow.600' }}> Recipes </Link>
                 <Logout />
               </>
             )}

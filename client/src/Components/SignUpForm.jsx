@@ -1,6 +1,14 @@
 import { useState } from "react"
 import { useAuth } from "../contexts/AuthProvider"
 import { Navigate, useNavigate } from "react-router-dom"
+import {
+    FormControl,
+    FormLabel,
+    Input,
+    Button,
+    Text,
+    FormErrorMessage,
+} from "@chakra-ui/react"
 
 const SignUpForm = () => {
     const { signUp, user } = useAuth()
@@ -23,21 +31,46 @@ const SignUpForm = () => {
         }
     }
 
-    if (user){
-        return <Navigate to={"/home"}/>
+    if (user) {
+        return <Navigate to={"/home"} />
     }
 
 
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="email" placeholder="Enter Email" />
-                <input type="password" name="password" placeholder="Enter Password" />
-                <input type="password" name="confirmPassword" placeholder="Re-enter Password" />
-                {passwordError && <p>{passwordError}</p>}
-                <input type="text" name="first_name" placeholder="Enter First Name" />
-                <input type="text" name="last_name" placeholder="Enter Last Name" />
-                <input type="submit" value="Sign Up" />
+                <FormControl id="email" isRequired>
+                    <FormLabel>Email</FormLabel>
+                    <Input type="email" name="email" placeholder="Enter Email" />
+                </FormControl>
+                <FormControl id="password" isRequired>
+                    <FormLabel>Password</FormLabel>
+                    <Input type="password" name="password" placeholder="Enter Password" />
+                </FormControl>
+                <FormControl id="confirmPassword" isRequired>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <Input
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Re-enter Password"
+                    />
+                </FormControl>
+                {passwordError && (
+                    <Text color="red.500" mt={2} mb={4}>
+                        {passwordError}
+                    </Text>
+                )}
+                <FormControl id="first_name" isRequired>
+                    <FormLabel>First Name</FormLabel>
+                    <Input type="text" name="first_name" placeholder="Enter First Name" />
+                </FormControl>
+                <FormControl id="last_name" isRequired>
+                    <FormLabel>Last Name</FormLabel>
+                    <Input type="text" name="last_name" placeholder="Enter Last Name" />
+                </FormControl>
+                <Button mt={4} colorScheme="teal" type="submit">
+                    Sign Up
+                </Button>
             </form>
 
         </>

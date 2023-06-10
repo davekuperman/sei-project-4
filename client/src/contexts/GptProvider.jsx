@@ -7,6 +7,7 @@ export const useRecipe = () => {
 };
 
 export const RecipeProvider = ({ children }) => {
+  const [generatedRecipe, setGeneratedRecipe] = useState(null)
   const [savedRecipe, setSavedRecipe] = useState(null)
 
   const handleRecipeSaved = async (recipe) => {
@@ -40,12 +41,13 @@ export const RecipeProvider = ({ children }) => {
         body: JSON.stringify({ ingredients }),
     });
 
-    const recipe = await response.json()
-    return recipe
+    const generateRecipe = await response.json()
+    setGeneratedRecipe(generateRecipe)
+    return generateRecipe
 };
 
   return (
-    <RecipeContext.Provider value={{ savedRecipe, handleRecipeSaved, generateRecipe, saveRecipe }}>
+    <RecipeContext.Provider value={{ savedRecipe, handleRecipeSaved, generateRecipe, generatedRecipe, saveRecipe }}>
       {children}
     </RecipeContext.Provider>
   );

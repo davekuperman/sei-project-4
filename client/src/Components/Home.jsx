@@ -1,6 +1,11 @@
 import { useAuth } from "../contexts/AuthProvider"
 import { useRecipe } from "../contexts/GptProvider"
 import { useState } from "react"
+import {
+    Box,
+    Text,
+    VStack,
+} from "@chakra-ui/react"
 import IngredientInputForm from "../Components/IngredientInputForm"
 
 const Home = () => {
@@ -25,8 +30,8 @@ const Home = () => {
 
 
     return (
-        <div>
-            <p>Welcome back {user?.first_name}</p>
+        <Box>
+            <Text>Welcome back {user?.first_name}</Text>
             <IngredientInputForm
                 onFormSubmit={handleFormSubmit}
                 onRecipeGenerated={setGeneratedRecipe}
@@ -40,8 +45,8 @@ const Home = () => {
                     onGenerateAnotherRecipe={() => setGeneratedRecipe(null)}
                 />
             )}
-        </div>
-    );
-};
+        </Box>
+    )
+}
 
 export default Home;

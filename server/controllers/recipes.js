@@ -40,11 +40,13 @@ router.get('/:id', (req, res) => {
       })
 })
 
-//get the ge
+
 router.post('/', async (req, res, next) => {
    try {
-      // console.log(req.session.user.id)
+      // console.log('poopsicle:',res)
       const userId = req.session.user.id
+      //console.log(userId)
+      console.log(req.body)
       const ingredients = req.body.ingredients
 
       if (!ingredients) {
@@ -62,7 +64,7 @@ router.post('/', async (req, res, next) => {
       const cookingTime = recipe.cookingTime
       const servings = recipe.servings
 
-      const recipeResult = await createRecipe(recipeName, recipeIngredients, instructions, cookingTime, servings)
+      const recipeResult = await createRecipe(userId, recipeName, recipeIngredients, instructions, cookingTime, servings)
 
       return res.status(200).json(recipe)
 
